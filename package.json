@@ -1,0 +1,32 @@
+{
+  "name": "typer",
+  "version": "1.0.0",
+  "description": "A Node.js server that receives text via HTTP requests and automatically types it on your computer using Python's pyautogui library",
+  "main": "typer.js",
+  "scripts": {
+    "start": "node typer.js",
+    "dev": "node typer.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "typing",
+    "automation",
+    "pyautogui",
+    "nodejs",
+    "express",
+    "remote-control"
+  ],
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/typer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/typer/issues"
+  },
+  "homepage": "https://github.com/yourusername/typer#readme"
+}
