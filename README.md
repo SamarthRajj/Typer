@@ -42,24 +42,14 @@ node typer.js
 
 The server will start on `http://0.0.0.0:3005`
 
-2. Send text to be typed via HTTP POST request:
+2. Send the request via Postman
+    Send a POST request to the link "http://your_ip_address:3005/receive" in JSON format. The text should be in body with feild name "text"
+    To find your ip address use "ipconfig" command in your cmd and paste the Wireless LAN adapter Wi-Fi:  IPv4 Address as your ip address.
 ```bash
-curl -X POST http://localhost:3005/receive \
-  -H "Content-Type: application/json" \
-  -d '{"text": "Hello, this will be typed automatically!"}'
-```
+{
+    "text": "Hello, this is a test message!"
+}
 
-Or using JavaScript:
-```javascript
-fetch('http://localhost:3005/receive', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    text: 'Hello, this will be typed automatically!'
-  })
-});
 ```
 
 ## Configuration
