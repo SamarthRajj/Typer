@@ -60,6 +60,21 @@ If you want to stop typing, tap "Cancel Typing"
 - **Text not appearing:** Click where you want the text to appear on your computer before sending
 - **Server won't start:** Check if port 3005 is already in use by another application
 
+## Customization & Tweaks
+
+You can adjust how the typing works by editing `typer.py`:
+
+- **Typing Speed:**
+  - Open `typer.py` in a text editor.
+  - Find the line: `time.sleep(0.01)`
+  - Lower the value (e.g., `0.005`) to type faster, or increase it (e.g., `0.05`) to type slower.
+
+- **Initial Delay Before Typing:**
+  - In `typer.py`, find the line: `time.sleep(2)`
+  - Change the number to set how many seconds to wait before typing starts after you send text.
+
+After making changes, save the file and restart the server if it's running.
+
 ## Files
 
 - `typer.js` - Main server file
