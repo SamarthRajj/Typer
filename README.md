@@ -48,11 +48,11 @@ You'll see: `Server is running on http://0.0.0.0:3005`
 
 ### Step 4: Send Text
 1. Type or paste text in the text area
-2. Tap "🚀 Send Text"
+2. Tap "Send Text"
 3. The text will appear on your computer after 2 seconds
 
 ### Step 5: Cancel Typing (Optional)
-If you want to stop typing, tap "✋ Cancel Typing"
+If you want to stop typing, tap "Cancel Typing"
 
 ## Troubleshooting
 
