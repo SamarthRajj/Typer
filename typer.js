@@ -1,5 +1,6 @@
 const express = require("express");
 const { spawn } = require("child_process");
+const path = require("path");
 
 const app = express();
 const PORT = 3005;
@@ -7,45 +8,54 @@ const PORT = 3005;
 // Middleware to parse JSON data from incoming requests
 app.use(express.json());
 
-// Define the allowed IP address
-const ALLOWED_IP = "192.168.187.79"; // Replace with the specific IP address of the second PC
+// Store the current Python process globally
+let currentPythonProcess = null;
+
+// Serve the web-interface.html file at the root URL
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "web-interface.html"));
+});
 
 // Route to handle POST requests at /receive
 app.post("/receive", (req, res) => {
-    // Get the client IP using req.socket.remoteAddress or req.ip (if behind a proxy)
-    const clientIp = req.ip || req.socket.remoteAddress;
-
-    console.log(`Request received from IP: ${clientIp}`);
-
-    // If behind a reverse proxy (like Nginx), the real IP might be in req.headers['x-forwarded-for']
-    // const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-
-    // // Filter requests from non-allowed IPs
-    // if (!clientIp.includes(ALLOWED_IP)) {
-    //     return res.status(403).send({ error: "Access denied. Your IP is not allowed." });
-    // }
-
     const textToType = req.body.text;
 
     if (!textToType) {
         return res.status(400).send({ error: "Text is required in the request body" });
     }
 
-    // Run the Python script with the text as input
-    const pythonProcess = spawn("python", ["typer.py", textToType]);
+    // If a process is already running, reject new requests
+    if (currentPythonProcess) {
+        return res.status(409).send({ error: "Typing is already in progress. Please cancel or wait." });
+    }
 
-    pythonProcess.stdout.on("data", (data) => {
+    // Run the Python script with the text as input
+    currentPythonProcess = spawn("python", ["typer.py", textToType]);
+
+    currentPythonProcess.stdout.on("data", (data) => {
         console.log(`Python script output: ${data.toString()}`);
     });
 
-    pythonProcess.stderr.on("data", (data) => {
+    currentPythonProcess.stderr.on("data", (data) => {
         console.error(`Python script error: ${data.toString()}`);
     });
 
-    pythonProcess.on("close", (code) => {
+    currentPythonProcess.on("close", (code) => {
         console.log(`Python script exited with code ${code}`);
-        res.send({ success: true, message: "Text sent to typer.py for typing" });
+        currentPythonProcess = null;
     });
+    res.send({ success: true, message: "Text sent to typer.py for typing" });
+});
+
+// Cancel endpoint
+app.post("/cancel", (req, res) => {
+    if (currentPythonProcess) {
+        currentPythonProcess.kill();
+        currentPythonProcess = null;
+        return res.send({ success: true, message: "Typing cancelled." });
+    } else {
+        return res.status(400).send({ error: "No typing process is running." });
+    }
 });
 
 // Start the server
